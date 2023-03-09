@@ -15,10 +15,14 @@ namespace SnakesAndLadders
 
         public int NumSnakes;
         public int NumLadders;
+
         private static int[] _snakes;
         private static int[] _ladders;
-
         private static int[] _goldSquareArray;
+
+        // Create two players
+        static Player player1 = new Player("Player 1");
+        static Player player2 = new Player("Player 2");
 
         public GameBoard(int numSnakes, int numLadders)
         {
@@ -32,7 +36,7 @@ namespace SnakesAndLadders
             RandomGoldenSquares();
         }
         //each run get random board
-        // Snakes and Ladders positions
+        // Snakes, Ladders and goldSquare positions
         public void RandomNumSnakes()
         {
             int counter = 0;
@@ -71,19 +75,54 @@ namespace SnakesAndLadders
                 if (_goldSquareArray[counter] == default && Array.IndexOf(_snakes, randomNum) == -1 && Array.IndexOf(_ladders, randomNum) == -1)
                 {
                     _goldSquareArray[counter] = randomNum;
+                    Console.WriteLine($"num of golden square {_goldSquareArray[counter]}");
                     counter++;
                 }
             }
         }
 
-        public void SwapPosition(Player position1,Player position2)
+        public void StartGame()
         {
-            if (position1.Position > position2.Position)
+            // Start the game loop
+            while (true)
             {
-                int tempswap = position1.Position;
-                position1.Position = position2.Position;
-                position2.Position = tempswap;
+                // Player 1 turn
+                Console.WriteLine($"{player1.Name}, press any key to roll the dice.");
+                Console.ReadKey();
+
+                int rollValue1 = RollDice();
+                int rollValue2 = RollDice();
+                Console.WriteLine($"{player1.Name} rolled a {rollValue1} and {rollValue2}.");
+                int sum = rollValue1 + rollValue2;
+                player1.Move(sum);
+                if (player1.Position >= Size)
+                {
+                    Console.WriteLine($"{player1.Name} won the game!");
+                    break;
+                }
+
+                // Player 2 turn
+                Console.WriteLine($"{player2.Name}, press any key to roll the dice.");
+                Console.ReadKey();
+
+                rollValue1 = RollDice();
+                rollValue2 = RollDice();
+                Console.WriteLine($"{player2.Name} rolled a {rollValue1} and {rollValue2}.");
+                sum = rollValue1 + rollValue2;
+                player2.Move(sum);
+                if (player2.Position >= Size)
+                {
+                    Console.WriteLine($"{player2.Name} won the game!");
+                    break;
+                }
             }
+        }
+        
+        static void SwapPositions(Player currentPlayer, Player otherPlayer)
+        {
+            int temp = currentPlayer.Position;
+            currentPlayer.Position = otherPlayer.Position;
+            otherPlayer.Position = temp;
         }
 
         public int RollDice()
@@ -106,9 +145,18 @@ namespace SnakesAndLadders
             }
             else if (Array.IndexOf(_goldSquareArray, position) != -1)
             {
-                Console.WriteLine($"Congratulations! you landed on golden square you switch places with the leading player {position}");
+                // Swap places with the leading player
+                if (position == player1.Position && player2.Position > player1.Position)
+                {
+                    Console.WriteLine("*You landed on a goldSquare!  You switch places with Player 2.*");
+                    SwapPositions(player1, player2);
+                }
+                else if (position == player2.Position && player1.Position > player2.Position)
+                {
+                    Console.WriteLine("*You landed on a goldSquare!  You switch places with Player 1.*");
+                    SwapPositions(player2, player1);
+                }
             }
-
             return position;
         }
     }
