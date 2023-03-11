@@ -11,7 +11,7 @@ namespace SnakesAndLadders
         static void Main(string[] args)
         {
             Console.WriteLine("Welcome to Snakes and Ladders Game!");
-            
+            //get number of snakes and ladder
             int numSnakes, numLadders;
             do
             {

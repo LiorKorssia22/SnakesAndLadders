@@ -21,8 +21,11 @@ namespace SnakesAndLadders
         private static int[] _goldSquareArray;
 
         // Create two players
-        static Player player1 = new Player("Player 1");
-        static Player player2 = new Player("Player 2");
+        public static Player player1 = new Player("Player 1");
+        public static Player player2 = new Player("Player 2");
+
+        // Keep track of the current player
+        Player currentPlayer = player1;
 
         public GameBoard(int numSnakes, int numLadders)
         {
@@ -51,7 +54,6 @@ namespace SnakesAndLadders
                 }
             }
         }
-
         public void RandomNumLadders()
         {
             int counter = 0;
@@ -95,6 +97,20 @@ namespace SnakesAndLadders
                 Console.WriteLine($"{player1.Name} rolled a {rollValue1} and {rollValue2}.");
                 int sum = rollValue1 + rollValue2;
                 player1.Move(sum);
+                //check gold square player1
+                if (player1.Position == _goldSquareArray[0] || player1.Position == _goldSquareArray[1])
+                {
+                    if (player2.Position > player1.Position)
+                    {
+                        Console.WriteLine("*You landed on a goldSquare!  You switch places with Player 2.*");
+                        SwapPositions(player1, player2);
+                    }
+                    else
+                    {
+                        Console.WriteLine("You landed on a goldSquare! but NOT SWITCH(YOU BIGGER)");
+                    }
+                }
+                //check win player2
                 if (player1.Position >= Size)
                 {
                     Console.WriteLine($"{player1.Name} won the game!");
@@ -110,15 +126,51 @@ namespace SnakesAndLadders
                 Console.WriteLine($"{player2.Name} rolled a {rollValue1} and {rollValue2}.");
                 sum = rollValue1 + rollValue2;
                 player2.Move(sum);
+                //check gold square player2
+                if (player2.Position == _goldSquareArray[0] || player2.Position == _goldSquareArray[1])
+                {
+                    if (player1.Position > player2.Position)
+                    {
+                        Console.WriteLine("*You landed on a goldSquare!  You switch places with Player 1.*");
+                        SwapPositions(player1, player2);
+                    }
+                    else
+                    {
+                        Console.WriteLine("You landed on a goldSquare! but NOT SWITCH(YOU BIGGER)");
+                    }
+                }
+                //check win player2
                 if (player2.Position >= Size)
                 {
                     Console.WriteLine($"{player2.Name} won the game!");
                     break;
                 }
+
             }
         }
-        
-        static void SwapPositions(Player currentPlayer, Player otherPlayer)
+        //public static void changeGold()
+        //{
+        //    if (player1.Position == _goldSquareArray)
+        //    {
+
+        //        if (position == player1.Position && player2.Position > player1.Position)
+        //        {
+        //            Console.WriteLine("*You landed on a goldSquare!  You switch places with Player 2.*");
+        //            SwapPositions(player1, player2);
+        //        }
+        //        else if (position == player2.Position && player1.Position > player2.Position)
+        //        {
+        //            Console.WriteLine("*You landed on a goldSquare!  You switch places with Player 1.*");
+        //            SwapPositions(player2, player1);
+        //        }
+        //        else
+        //        {
+        //            Console.WriteLine("You landed on a goldSquare! but NOT SWITCH(YOU BIGGER)");
+        //        }
+        //    }
+        //}
+
+        public static void SwapPositions(Player currentPlayer, Player otherPlayer)
         {
             int temp = currentPlayer.Position;
             currentPlayer.Position = otherPlayer.Position;
@@ -143,20 +195,27 @@ namespace SnakesAndLadders
                 Console.WriteLine($"Congratulations! You landed on a ladder! Climb up to position {position + 10}.");
                 position += 10;
             }
-            else if (Array.IndexOf(_goldSquareArray, position) != -1)
-            {
-                // Swap places with the leading player
-                if (position == player1.Position && player2.Position > player1.Position)
-                {
-                    Console.WriteLine("*You landed on a goldSquare!  You switch places with Player 2.*");
-                    SwapPositions(player1, player2);
-                }
-                else if (position == player2.Position && player1.Position > player2.Position)
-                {
-                    Console.WriteLine("*You landed on a goldSquare!  You switch places with Player 1.*");
-                    SwapPositions(player2, player1);
-                }
-            }
+            //else if (Array.IndexOf(_goldSquareArray, position) != -1)
+            //{
+            //    // Swap places with the leading player
+            //    if (position == player1.Position && player2.Position > player1.Position)
+            //    {
+            //        Console.WriteLine("*You landed on a goldSquare!  You switch places with Player 2.*");
+            //        SwapPositions(player1, player2);
+            //        return player2.Position;
+            //    }
+            //    else if (position == player2.Position && player1.Position > player2.Position)
+            //    {
+            //        Console.WriteLine("*You landed on a goldSquare!  You switch places with Player 1.*");
+            //        SwapPositions(player2, player1);
+            //        return player1.Position;
+            //    }
+            //    else
+            //    {
+            //        Console.WriteLine("You landed on a goldSquare! but NOT SWITCH(YOU BIGGER)");
+            //    }
+
+            //}
             return position;
         }
     }

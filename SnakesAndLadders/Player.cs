@@ -8,7 +8,7 @@ namespace SnakesAndLadders
 {
     public class Player
     {
-        public string Name { get; private set; }
+        public string Name { get; set; }
         public int Position { get; set; }
 
         public Player(string name)
