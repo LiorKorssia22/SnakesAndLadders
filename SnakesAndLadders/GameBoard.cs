@@ -82,6 +82,7 @@ namespace SnakesAndLadders
                 }
             }
         }
+        //I debated whether to put the StartGame in the gameboard, or in the program, but I want the board to hold the game, in my opinion, this is a more correct approach.
         public void StartGame()
         {
             // Start the game loop
@@ -146,7 +147,7 @@ namespace SnakesAndLadders
                 }
             }
         }
-
+        
         private static void SwapPositions(Player currentPlayer, Player otherPlayer)
         {
             int temp = currentPlayer.Position;
