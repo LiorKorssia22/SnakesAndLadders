@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.IO.Ports;
 using System.Linq;
+using System.Security.Cryptography.X509Certificates;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -17,7 +18,9 @@ namespace SnakesAndLadders
         public int NumLadders;
 
         private static int[] _snakes;
+        private static int[] _snakesEnd;
         private static int[] _ladders;
+        private static int[] _laddersEnd;
         private static int[] _goldSquareArray;
 
         // Create two players
@@ -29,7 +32,9 @@ namespace SnakesAndLadders
             this.NumSnakes = numSnakes;     // get numSnakes parameter
             this.NumLadders = numLadders;   // get numLadders parameter
             _snakes = new int[numSnakes];   // set numSnakes length
+            _snakesEnd = new int[numSnakes];
             _ladders = new int[numLadders]; // set numLadders length
+            _laddersEnd = new int[numLadders];
             _goldSquareArray = new int[2];  // set goldSquare length
             RandomNumSnakes();              //create random snakes
             RandomNumLadders();             //create random ladders
@@ -37,32 +42,41 @@ namespace SnakesAndLadders
         }
         //each run get random board
         // Snakes, Ladders and goldSquare positions
-        private void RandomNumSnakes()
+      public static int randPositionOfSnakes = _random.Next(10, 21);
+        public void RandomNumSnakes()
         {
             int counter = 0;
             while (counter < NumSnakes)
             {
                 int randomNum = _random.Next(30, 100);
+                 int endSnake = randomNum - randPositionOfSnakes;
                 //check position is empty and not the same (as snakes)
-                if (_snakes[counter] == default && Array.IndexOf(_snakes, randomNum) == -1)
+                if (_snakes[counter] == default && _snakesEnd[counter] == default && Array.IndexOf(_snakes, randomNum) == -1 && Array.IndexOf(_snakesEnd, randomNum) == -1
+                    && Array.IndexOf(_snakesEnd, endSnake) == -1 && Array.IndexOf(_snakes, endSnake) == -1)
                 {
                     _snakes[counter] = randomNum;
-                    Console.WriteLine($"num of snakes {_snakes[counter]}");
+                    _snakesEnd[counter] = endSnake;
+                    Console.WriteLine($"num of snakes for {_snakes[counter]} to {_snakesEnd[counter]}");
                     counter++;
                 }
             }
         }
+
+       public static int randPositionOfLadders = _random.Next(10, 21);
         private void RandomNumLadders()
         {
             int counter = 0;
             while (counter < NumLadders)
             {
                 int randomNum = _random.Next(11, 71);
+                int endLadders = randomNum + randPositionOfLadders;
                 //check position is empty and not the same (as ladder and snake)
-                if (_ladders[counter] == default && Array.IndexOf(_ladders, randomNum) == -1 && Array.IndexOf(_snakes, randomNum) == -1)
+                if (_ladders[counter] == default && _laddersEnd[counter] == default && Array.IndexOf(_ladders, randomNum) == -1 && Array.IndexOf(_laddersEnd, randomNum) == -1 && Array.IndexOf(_ladders, endLadders) == -1 && Array.IndexOf(_laddersEnd, endLadders) == -1
+                    && Array.IndexOf(_snakes, randomNum) == -1 && Array.IndexOf(_snakesEnd, randomNum) == -1 && Array.IndexOf(_snakesEnd, randomNum - randPositionOfSnakes) == -1 && Array.IndexOf(_snakes, randomNum - randPositionOfSnakes) == -1 && Array.IndexOf(_laddersEnd, _snakes) == -1 && Array.IndexOf(_ladders, _snakesEnd) == -1 && Array.IndexOf(_laddersEnd, _snakesEnd) == -1) 
                 {
                     _ladders[counter] = randomNum;
-                    Console.WriteLine($"num of ladders {_ladders[counter]}");
+                    _laddersEnd[counter] = endLadders;
+                    Console.WriteLine($"num of ladders from {_ladders[counter]} to {_laddersEnd[counter]}");
                     counter++;
                 }
             }
@@ -74,7 +88,9 @@ namespace SnakesAndLadders
             {
                 int randomNum = _random.Next(11, 100);
                 //check position is empty and not the same (as ladder and snake and gold squre)
-                if (_goldSquareArray[counter] == default && Array.IndexOf(_goldSquareArray, randomNum) == -1 && Array.IndexOf(_snakes, randomNum) == -1 && Array.IndexOf(_ladders, randomNum) == -1)
+                if (_goldSquareArray[counter] == default && Array.IndexOf(_goldSquareArray, randomNum) == -1 && Array.IndexOf(_snakes, randomNum) == -1 && Array.IndexOf(_ladders, randomNum) == -1 &&
+                    Array.IndexOf(_laddersEnd, randomNum) == -1 && Array.IndexOf(_snakesEnd, randomNum) == -1 && Array.IndexOf(_snakesEnd, randomNum - randPositionOfSnakes) == -1 && Array.IndexOf(_snakes, randomNum - randPositionOfSnakes) == -1 
+                    && Array.IndexOf(_laddersEnd, randomNum) == -1 && Array.IndexOf(_ladders, randomNum + randPositionOfLadders) == -1 && Array.IndexOf(_laddersEnd, randomNum + randPositionOfLadders) == -1)
                 {
                     _goldSquareArray[counter] = randomNum;
                     Console.WriteLine($"num of golden square {_goldSquareArray[counter]}");
@@ -89,27 +105,8 @@ namespace SnakesAndLadders
             while (true)
             {
                 // Player 1 turn
-                Console.WriteLine($"{player1.Name}, press any key to roll the dice.");
-                Console.ReadKey();
-
-                int rollValue1 = RollDice();
-                int rollValue2 = RollDice();
-                Console.WriteLine($"{player1.Name} rolled a {rollValue1} and {rollValue2}.");
-                int sum = rollValue1 + rollValue2;
-                player1.Move(sum);
-                //check gold square player1 and swap
-                if (player1.Position == _goldSquareArray[0] || player1.Position == _goldSquareArray[1])
-                {
-                    if (player2.Position > player1.Position)
-                    {
-                        Console.WriteLine("*You landed on a goldSquare!  You switch places with Player 2.*");
-                        SwapPositions(player1, player2);
-                    }
-                    else
-                    {
-                        Console.WriteLine("You landed on a goldSquare! but NOT SWITCH(YOU BIGGER)");
-                    }
-                }
+                PlayPlayer(player1);
+                CheckSwapPlayer(player1, player2);
                 //check win player1
                 if (player1.Position >= _size)
                 {
@@ -118,27 +115,8 @@ namespace SnakesAndLadders
                 }
 
                 // Player 2 turn
-                Console.WriteLine($"{player2.Name}, press any key to roll the dice.");
-                Console.ReadKey();
-
-                rollValue1 = RollDice();
-                rollValue2 = RollDice();
-                Console.WriteLine($"{player2.Name} rolled a {rollValue1} and {rollValue2}.");
-                sum = rollValue1 + rollValue2;
-                player2.Move(sum);
-                //check gold square player2 and swap
-                if (player2.Position == _goldSquareArray[0] || player2.Position == _goldSquareArray[1])
-                {
-                    if (player1.Position > player2.Position)
-                    {
-                        Console.WriteLine("*You landed on a goldSquare!  You switch places with Player 1.*");
-                        SwapPositions(player2, player1);
-                    }
-                    else
-                    {
-                        Console.WriteLine("You landed on a goldSquare! but NOT SWITCH(YOU BIGGER)");
-                    }
-                }
+                PlayPlayer(player2);
+                CheckSwapPlayer(player2, player1);
                 //check win player2
                 if (player2.Position >= _size)
                 {
@@ -147,7 +125,36 @@ namespace SnakesAndLadders
                 }
             }
         }
-        
+
+        public void CheckSwapPlayer(Player currentPlayer, Player otherPlayer)
+        {
+            if (currentPlayer.Position == _goldSquareArray[0] || currentPlayer.Position == _goldSquareArray[1])
+            {
+                if (otherPlayer.Position > currentPlayer.Position)
+                {
+                    Console.WriteLine($"*You landed on a goldSquare!  You switch places with {otherPlayer.Name}.*");
+                    SwapPositions(currentPlayer, otherPlayer);
+                }
+                else
+                {
+                    Console.WriteLine("You landed on a goldSquare! but NOT SWITCH(YOU BIGGER)");
+                }
+            }
+        }
+
+        public void PlayPlayer(Player player)
+        {
+            Console.WriteLine($"{player.Name}, press any key to roll the dice.");
+            Console.ReadKey();
+
+            int rollValue1 = RollDice();
+            int rollValue2 = RollDice();
+            Console.WriteLine($"{player.Name} rolled a {rollValue1} and {rollValue2}.");
+            int sum = rollValue1 + rollValue2;
+            player.Move(sum);
+        }
+
+
         private static void SwapPositions(Player currentPlayer, Player otherPlayer)
         {
             int temp = currentPlayer.Position;
@@ -155,24 +162,23 @@ namespace SnakesAndLadders
             otherPlayer.Position = temp;
         }
 
-        private int RollDice()
+        private static int RollDice()
         {
             return _random.Next(1, 7);
         }
 
         public static int CheckPosition(int position)
         {
-            int rndNum = _random.Next(10, 21);
             // Check if the player lands on a snake or ladder position
             if (Array.IndexOf(_snakes, position) != -1)
             {
-                Console.WriteLine($"Oops! You landed on a snake! Go back to position {position - rndNum}.");
-                position -= rndNum;
+                Console.WriteLine($"Oops! You landed on a snake! Go back to position {position - randPositionOfSnakes}.");
+                position -= randPositionOfSnakes;
             }
             else if (Array.IndexOf(_ladders, position) != -1)
             {
-                Console.WriteLine($"Congratulations! You landed on a ladder! Climb up to position {position + rndNum}.");
-                position += rndNum;
+                Console.WriteLine($"Congratulations! You landed on a ladder! Climb up to position {position + randPositionOfLadders}.");
+                position += randPositionOfLadders;
             }
             return position;
         }
