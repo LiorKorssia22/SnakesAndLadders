@@ -9,36 +9,36 @@ namespace SnakesAndLadders
     public class FixedBoard
     {
         private const int BoardSize = 100;
-        private static readonly int[] LadderStarts = { 1, 4, 8, 21, 28, 50, 71, 80 };
-        private static readonly int[] LadderEnds = { 38, 14, 30, 42, 76, 67, 92, 99 };
-        private static readonly int[] SnakeHeads = { 32, 36, 48, 62, 88, 95, 97 };
-        private static readonly int[] SnakeTails = { 10, 6, 26, 18, 24, 56, 78 };
-        private PlayerFixed[] _players;
+        private static readonly int[] ladderStarts = { 1, 4, 8, 21, 28, 50, 71, 80 };
+        private static readonly int[] ladderEnds = { 38, 14, 30, 42, 76, 67, 92, 99 };
+        private static readonly int[] snakeHeads = { 32, 36, 48, 62, 88, 95, 97 };
+        private static readonly int[] snakeTails = { 10, 6, 26, 18, 24, 56, 78 };
+        private Player[] _players;
         private int _currentPlayerIndex;
         private static Random _random = new Random();
 
         public FixedBoard(string player1Name, string player2Name)
         {
-            _players = new PlayerFixed[2];
-            _players[0] = new PlayerFixed(player1Name);
-            _players[1] = new PlayerFixed(player2Name);
+            _players = new Player[2];
+            _players[0] = new Player(player1Name);
+            _players[1] = new Player(player2Name);
             _currentPlayerIndex = 0;
         }
         private void PrintLadders()
         {
             int counter = 0;
-            while (counter < LadderStarts.Length)
+            while (counter < ladderStarts.Length)
             {
-                Console.WriteLine($"ladders start from {LadderStarts[counter]} to {LadderEnds[counter]}");
+                Console.WriteLine($"ladders start from {ladderStarts[counter]} to {ladderEnds[counter]}");
                 counter++;
             }
         }
         private void PrintSnakes()
         {
             int counter = 0;
-            while (counter < SnakeHeads.Length)
+            while (counter < snakeHeads.Length)
             {
-                Console.WriteLine($"snakes start from {SnakeHeads[counter]} to {SnakeTails[counter]}");
+                Console.WriteLine($"snakes start from {snakeHeads[counter]} to {snakeTails[counter]}");
                 counter++;
             }
         }
@@ -78,18 +78,18 @@ namespace SnakesAndLadders
 
         private void CheckLadderOrSnake()
         {
-            int index = Array.IndexOf(LadderStarts, _players[_currentPlayerIndex].Position);
+            int index = Array.IndexOf(ladderStarts, _players[_currentPlayerIndex].Position);
             if (index != -1)
             {
-                Console.WriteLine($"Ladder found! {_players[_currentPlayerIndex].Name} climbs from {_players[_currentPlayerIndex].Position} to {LadderEnds[index]}");
-                _players[_currentPlayerIndex].Jump(LadderEnds[index]);
+                Console.WriteLine($"Ladder found! {_players[_currentPlayerIndex].Name} climbs from {_players[_currentPlayerIndex].Position} to {ladderEnds[index]}");
+                _players[_currentPlayerIndex].Jump(ladderEnds[index]);
             }
 
-            index = Array.IndexOf(SnakeHeads, _players[_currentPlayerIndex].Position);
+            index = Array.IndexOf(snakeHeads, _players[_currentPlayerIndex].Position);
             if (index != -1)
             {
-                Console.WriteLine($"Snake found! {_players[_currentPlayerIndex].Name} slides from {_players[_currentPlayerIndex].Position} to {SnakeTails[index]}");
-                _players[_currentPlayerIndex].Jump(SnakeTails[index]);
+                Console.WriteLine($"Snake found! {_players[_currentPlayerIndex].Name} slides from {_players[_currentPlayerIndex].Position} to {snakeTails[index]}");
+                _players[_currentPlayerIndex].Jump(snakeTails[index]);
             }
         }
     }

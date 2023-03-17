@@ -21,10 +21,11 @@ namespace SnakesAndLadders
         {
             Position += steps;
             Console.WriteLine($"{Name} moved to position {Position}.");
+        }
 
-            // Check if the player lands on a snake , ladder and goldSquare position
-          
-            Position = GameBoard.CheckPosition(Position);
+        public void Jump(int destination)
+        {
+            Position = destination;
         }
     }
 }
