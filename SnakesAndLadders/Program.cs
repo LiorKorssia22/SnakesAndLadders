@@ -1,8 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace SnakesAndLadders
 {
@@ -14,7 +10,7 @@ namespace SnakesAndLadders
             int randomOrFixed;
             do
             {
-                Console.Write("for Fixed play enter 1 for random play enter 2: ");
+                Console.Write("for Fixed play enter 1 for Random play enter 2: ");
             } while (!int.TryParse(Console.ReadLine(), out randomOrFixed) || randomOrFixed <= 0 || randomOrFixed >= 3);
 
             if (randomOrFixed == 2)
@@ -37,19 +33,15 @@ namespace SnakesAndLadders
 
                 //start the game loop
                 board.StartGame();
-
-                Console.WriteLine("Press any key to exit.");
-                Console.ReadKey();
             }
             else
             {
                 Console.WriteLine("you choose Fixed play");
                 FixedBoard game = new FixedBoard("Player 1", "Player 2");
                 game.RunFixedBoard();
-                Console.WriteLine("Press any key to exit.");
-                Console.ReadKey();
             }
-
+            Console.WriteLine("Press any key to exit.");
+            Console.ReadKey();
         }
     }
 }

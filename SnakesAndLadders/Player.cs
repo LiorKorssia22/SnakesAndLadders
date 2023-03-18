@@ -1,8 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace SnakesAndLadders
 {
@@ -23,7 +19,7 @@ namespace SnakesAndLadders
             Console.WriteLine($"{Name} moved to position {Position}.");
         }
 
-        public void Jump(int destination)
+        public void JumpToDestination(int destination)
         {
             Position = destination;
         }
