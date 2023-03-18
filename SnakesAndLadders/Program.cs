@@ -19,6 +19,7 @@ namespace SnakesAndLadders
 
             if (randomOrFixed == 2)
             {
+                Console.WriteLine("you choose random play");
                 //get snake and ladder parameters
                 int numSnakes, numLadders;
                 do
@@ -43,8 +44,6 @@ namespace SnakesAndLadders
             else
             {
                 Console.WriteLine("you choose Fixed play");
-                //FixedBoard fixedBoard = new FixedBoard();
-                //fixedBoard.StartGameFixed();
                 FixedBoard game = new FixedBoard("Player 1", "Player 2");
                 game.RunFixedBoard();
                 Console.WriteLine("Press any key to exit.");

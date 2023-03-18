@@ -42,6 +42,7 @@ namespace SnakesAndLadders
         }
         //each run get random board
         // Snakes, Ladders and goldSquare positions
+                   // && Array.IndexOf(_snakesEnd, endSnake) == -1 && Array.IndexOf(_snakes, endSnake) == -1
         public static int randPositionOfSnakes = _random.Next(10, 21);
         public void RandomNumSnakes()
         {
@@ -51,8 +52,9 @@ namespace SnakesAndLadders
                 int randomNum = _random.Next(30, 100);
                 int endSnake = randomNum - randPositionOfSnakes;
                 //check position is empty and not the same (as snakes)
-                if (_snakes[counter] == default && _snakesEnd[counter] == default && Array.IndexOf(_snakes, randomNum) == -1 && Array.IndexOf(_snakesEnd, randomNum) == -1
-                    && Array.IndexOf(_snakesEnd, endSnake) == -1 && Array.IndexOf(_snakes, endSnake) == -1)
+                if (_snakes[counter] == default && _snakesEnd[counter] == default 
+                    && Array.IndexOf(_snakes, randomNum) == -1 && Array.IndexOf(_snakesEnd, randomNum) == -1
+                    )
                 {
                     _snakes[counter] = randomNum;
                     _snakesEnd[counter] = endSnake;
@@ -62,6 +64,11 @@ namespace SnakesAndLadders
             }
         }
 
+                //&& Array.IndexOf(_ladders, endLadders) == -1 && Array.IndexOf(_laddersEnd, endLadders) == -1
+                //    && Array.IndexOf(_snakes, randomNum) == -1 && Array.IndexOf(_snakesEnd, randomNum) == -1
+                //    && Array.IndexOf(_snakesEnd, randomNum - randPositionOfSnakes) == -1
+                //    && Array.IndexOf(_snakes, randomNum - randPositionOfSnakes) == -1 && Array.IndexOf(_laddersEnd, _snakes) == -1
+                //    && Array.IndexOf(_ladders, _snakesEnd) == -1 && Array.IndexOf(_laddersEnd, _snakesEnd) == -1
         public static int randPositionOfLadders = _random.Next(10, 21);
         private void RandomNumLadders()
         {
@@ -71,8 +78,9 @@ namespace SnakesAndLadders
                 int randomNum = _random.Next(11, 71);
                 int endLadders = randomNum + randPositionOfLadders;
                 //check position is empty and not the same (as ladder and snake)
-                if (_ladders[counter] == default && _laddersEnd[counter] == default && Array.IndexOf(_ladders, randomNum) == -1 && Array.IndexOf(_laddersEnd, randomNum) == -1 && Array.IndexOf(_ladders, endLadders) == -1 && Array.IndexOf(_laddersEnd, endLadders) == -1
-                    && Array.IndexOf(_snakes, randomNum) == -1 && Array.IndexOf(_snakesEnd, randomNum) == -1 && Array.IndexOf(_snakesEnd, randomNum - randPositionOfSnakes) == -1 && Array.IndexOf(_snakes, randomNum - randPositionOfSnakes) == -1 && Array.IndexOf(_laddersEnd, _snakes) == -1 && Array.IndexOf(_ladders, _snakesEnd) == -1 && Array.IndexOf(_laddersEnd, _snakesEnd) == -1)
+                if (_ladders[counter] == default && _laddersEnd[counter] == default 
+                    && Array.IndexOf(_ladders, randomNum) == -1 && Array.IndexOf(_laddersEnd, randomNum) == -1
+                    )
                 {
                     _ladders[counter] = randomNum;
                     _laddersEnd[counter] = endLadders;
@@ -168,7 +176,7 @@ namespace SnakesAndLadders
             return _random.Next(1, 7);
         }
 
-        public static void CheckPosition(int position , Player currentPlayer)
+        public static void CheckPosition(int position, Player currentPlayer)
         {
             // Check if the player lands on a snake or ladder position
             int index = Array.IndexOf(_snakes, position);
